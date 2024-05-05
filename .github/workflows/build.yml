@@ -1,0 +1,63 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'generateThemes/**'
+      - 'gradle.properties'
+      - '**.gradle.kts'
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'generateThemes/**'
+      - 'gradle.properties'
+      - '**.gradle.kts'
+
+env:
+  DENO_DIR: deno_cache
+
+jobs:
+  build:
+    name: Build Plugin
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Cache Deno
+        uses: actions/cache@v3
+        with:
+          key: ${{ hashFiles('generateThemes/lock.json') }}
+          path: ${{ env.DENO_DIR }}
+
+      - name: Generate Theme
+        run: ./generateThemes/main.ts
+
+      - name: Build Plugin
+        run: ./gradlew buildPlugin
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: "Asteria Theme-Snapshot.jar"
+          path: build/libs/*.jar
+
+      - name: Output Unreleased Changes
+        run: |
+          echo "# 🚧 Unreleased 🚧" >> $GITHUB_STEP_SUMMARY
+          echo "$(./gradlew getChangelog --unreleased --no-header --console=plain -q)" >> $GITHUB_STEP_SUMMARY
