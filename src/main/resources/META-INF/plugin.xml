@@ -1,14 +1,14 @@
 <idea-plugin>
     <id>com.linden.asteria-theme</id>
-    <name>Asteria</name>
+    <name>Asteria Theme</name>
     <vendor email="l.dalegandar@gmail.com" url="https://github.com/linden-dg/asteria-intellj-theme">Linden</vendor>
 
-    <description><![CDATA[Asteria is heavily inspired by the <a href="https://github.com/catppuccin/jetbrains" target="_blank">Catppuccin Mocha</a> theme, with modification to use a higher contrast dark purple background
-<br/><br/>
-
-<br/><br/>
-   ]]></description>
-
+    <description><![CDATA[
+    Asteria is heavily inspired by the <a href="https://github.com/catppuccin/jetbrains" target="_blank">Catppuccin Mocha</a> theme.
+    The aim of this theme is to retain the overall aesthetics of Catppuccin, while increasing the contrast with e.g. deeper background colours.
+    <br/><br/>
+    ]]>
+    </description>
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
         <themeProvider id="com.github.linden.asteria.jetbrains" path="/themes/asteria.theme.json"/>

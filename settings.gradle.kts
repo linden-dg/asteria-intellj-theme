@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Asteria"
+rootProject.name = "Asteria Theme"

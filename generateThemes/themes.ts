@@ -2,7 +2,8 @@ const asteria = {
     "rosewater": "#f5e0dc",
     "flamingo": "#f2cdcd",
     "pink": "#f5c2e7",
-    "mauve": "#cba6f7",
+    // "mauve": "#cba6f7",
+    "mauve": "#caa1ff",
     "red": "#f38ba8",
     "maroon": "#eba0ac",
     "peach": "#fab387",
@@ -40,7 +41,7 @@ const rgbToHsl = (r: number, g: number, b: number) => {
         cmax = Math.max(r, g, b),
         delta = cmax - cmin,
         h = 0,
-        s = 0,
+        s: number,
         l = 0;
 
     if (delta == 0)
