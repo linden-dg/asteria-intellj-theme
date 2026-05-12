@@ -22,7 +22,7 @@ jobs:
           ref: main
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 21
@@ -58,7 +58,7 @@ jobs:
         run: ./gradlew buildPlugin
 
       - name: Upload JAR
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.name }}-${{ env.version }}.jar
           path: build/libs/*.jar
