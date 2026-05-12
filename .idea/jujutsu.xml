@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JujutsuSettings">
+    <option name="customLogColumnWidths">
+      <map>
+        <entry key="0" value="6" />
+        <entry key="1" value="600" />
+        <entry key="2" value="50" />
+        <entry key="3" value="90" />
+        <entry key="4" value="500" />
+        <entry key="5" value="120" />
+        <entry key="6" value="100" />
+        <entry key="7" value="100" />
+        <entry key="8" value="120" />
+      </map>
+    </option>
+    <option name="settingsVersion" value="2" />
+  </component>
+</project>

@@ -1,47 +1,94 @@
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.date
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.9.22"
-    id("org.jetbrains.intellij") version "1.17.2"
+    id("org.jetbrains.intellij.platform") version "2.16.0"
+    id("org.jetbrains.changelog") version "2.5.0"
 }
 
-group = "com.asteria"
-version = "0.1.1"
+group = providers.gradleProperty("pluginGroup").get()
+version = providers.gradleProperty("pluginVersion").get()
 
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    version.set("2023.2.5")
-    type.set("IC") // Target IDE Platform
+dependencies {
+    intellijPlatform {
+        intellijIdea(providers.gradleProperty("platformVersion").get())
+    }
+}
 
-    plugins.set(listOf(/* Plugin Dependencies */))
+java {
+    toolchain {
+        languageVersion.set(
+            providers.gradleProperty("javaToolchainVersion").map(String::toInt).map(JavaLanguageVersion::of),
+        )
+    }
+}
+
+intellijPlatform {
+    buildSearchableOptions = false
+
+    pluginConfiguration {
+        id.set(providers.gradleProperty("pluginGroup"))
+        name.set(providers.gradleProperty("pluginName"))
+        version.set(providers.gradleProperty("pluginVersion"))
+
+        changelog {
+            version.set(providers.gradleProperty("pluginVersion"))
+            path.set(file("CHANGELOG.md").canonicalPath)
+            header.set(provider { "${version.get()} - ${date()}" })
+            headerParserRegex.set("""(\d+\.\d+\.\d+)""".toRegex())
+            itemPrefix.set("-")
+            keepUnreleasedSection.set(true)
+            unreleasedTerm.set("[Unreleased]")
+            groups.set(listOf("Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"))
+        }
+
+        ideaVersion {
+            sinceBuild.set(providers.gradleProperty("pluginSinceBuild"))
+        }
+    }
+
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
+    }
+
+    publishing {
+        token.set(providers.environmentVariable("PUBLISH_TOKEN"))
+    }
 }
 
 tasks {
-    // Set the JVM compatibility versions
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
+    providers.gradleProperty("javaVersion").get().let {
+        withType<JavaCompile> {
+            sourceCompatibility = it
+            targetCompatibility = it
+            options.release.set(it.toInt())
+        }
     }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+
+    wrapper {
+        gradleVersion = providers.gradleProperty("gradleVersion").get()
     }
 
     patchPluginXml {
-        sinceBuild.set("232")
-        untilBuild.set(provider { null })
-    }
-
-    signPlugin {
-        certificateChain.set(System.getenv("CERTIFICATE_CHAIN"))
-        privateKey.set(System.getenv("PRIVATE_KEY"))
-        password.set(System.getenv("PRIVATE_KEY_PASSWORD"))
+        pluginVersion.set(providers.gradleProperty("pluginVersion"))
+        sinceBuild.set(providers.gradleProperty("pluginSinceBuild"))
+        changeNotes.set(
+            provider { changelog.renderItem(changelog.getLatest(), Changelog.OutputType.HTML) },
+        )
     }
 
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        dependsOn("patchChangelog")
     }
 }

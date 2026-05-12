@@ -7,17 +7,18 @@ on:
     paths:
       - 'src/**'
       - 'generateThemes/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
       - 'gradle.properties'
       - '**.gradle.kts'
   pull_request:
     paths:
       - 'src/**'
       - 'generateThemes/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
       - 'gradle.properties'
       - '**.gradle.kts'
-
-env:
-  DENO_DIR: deno_cache
 
 jobs:
   build:
@@ -31,22 +32,25 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: zulu
-          java-version: 17
+          java-version: 21
           cache: 'gradle'
 
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          deno-version: v1.x
+          version: 11.1.1
 
-      - name: Cache Deno
-        uses: actions/cache@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          key: ${{ hashFiles('generateThemes/lock.json') }}
-          path: ${{ env.DENO_DIR }}
+          node-version: 22
+          cache: pnpm
+
+      - name: Install Node Dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Theme
-        run: ./generateThemes/main.ts
+        run: pnpm generate:themes
 
       - name: Build Plugin
         run: ./gradlew buildPlugin

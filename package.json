@@ -1,0 +1,10 @@
+{
+  "name": "asteria-intellij-theme",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.1.1",
+  "scripts": {
+    "generate:themes": "node generateThemes/main.mjs"
+  }
+}

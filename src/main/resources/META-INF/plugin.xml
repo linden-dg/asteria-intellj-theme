@@ -12,6 +12,7 @@
     <depends>com.intellij.modules.platform</depends>
     <extensions defaultExtensionNs="com.intellij">
         <themeProvider id="com.github.linden.asteria.jetbrains" path="/themes/asteria.theme.json"/>
+        <themeProvider id="com.github.linden.asteria.islands.jetbrains" path="/themes/asteria-islands.theme.json" targetUi="islands"/>
         <bundledColorScheme id="com.github.linden.asteria.italics.jetbrains" path="/themes/asteria"/>
     </extensions>
 </idea-plugin>

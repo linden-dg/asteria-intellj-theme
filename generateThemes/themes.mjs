@@ -1,0 +1,32 @@
+const asteria = {
+  rosewater: "#f5e0dc",
+  flamingo: "#f2cdcd",
+  pink: "#f5c2e7",
+  mauve: "#caa1ff",
+  red: "#f38ba8",
+  maroon: "#eba0ac",
+  peach: "#fab387",
+  yellow: "#f9e2af",
+  green: "#a6e3a1",
+  teal: "#94e2d5",
+  sky: "#89dceb",
+  sapphire: "#74c7ec",
+  blue: "#89b4fa",
+  lavender: "#b4befe",
+  text: "#ddd7ff",
+  subtext1: "#c4bce4",
+  subtext0: "#ada2c9",
+  overlay2: "#9589af",
+  overlay1: "#7f7096",
+  overlay0: "#69597e",
+  surface2: "#544267",
+  surface1: "#3f2c50",
+  surface0: "#2c173b",
+  base: "#16021f",
+  mantle: "#0c001b",
+  crust: "#0d0012",
+};
+
+export const palettes = {
+  asteria,
+};
